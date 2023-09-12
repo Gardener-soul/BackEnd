@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- scope = "" ~ 타입에 따라 객체의 타입을 설정할 수 있다. 싱글턴이라던지, 가져올 때마다 다르게 초기화되어야하는건지 -->
+	<bean class="com.ssafy.di.Desktop" id="desktop" ></bean>
+	<bean class="com.ssafy.di.Programmer" id="programmer"></bean>
+</beans>
