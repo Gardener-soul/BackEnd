@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+	
+	<!-- 약간 국룰처럼 이거 작성 -->
+	<aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
+
+	<bean class = "com.ssafy.aop.Programmer" id="programmer"/>
+	<bean class = "com.ssafy.aop.Ssafy" id="ssafy"/>
+	<bean class = "com.ssafy.aop.MyAspect" id="myAspect"/>
+	
+	<aop:config> <!-- expression(메서드, 이 안에 어떤 메서드가 오는 것이 동작하는게 좋을지) -->
+		<aop:pointcut expression="execution(public * com.ssafy.aop.*.coding())" id="mypt"/>
+		<aop:aspect ref="myAspect"> <!-- 위에서 bean으로 등록해놓은 myAspect를 가지고 와라 -->
+			<aop:before method="before" pointcut-ref="mypt"/>
+			<aop:after-returning method="afterReturning" pointcut-ref="mypt"/>
+			<aop:after-throwing method="afterThrowing" pointcut-ref="mypt" throwing="th"/> <!-- th라는 이름으로 인자가 던져짐 -->
+			<aop:after method="after" pointcut-ref="mypt"/>
+		  <!--  <aop:around method="around" pointcut-ref="mypt"/> -->
+		</aop:aspect>
+	</aop:config>
+</beans>
