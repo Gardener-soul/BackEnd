@@ -78,18 +78,4 @@ public class BoardController {
 		boardService.modifyBoard(board);
 		return "redirect:detail?id="+board.getId();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
