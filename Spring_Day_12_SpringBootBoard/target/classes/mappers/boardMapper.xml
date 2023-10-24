@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.board.model.dao.BoardDao"> 
+<!-- 여길 비워놓으면 이슈 생김 -->
+<!-- Test 파일에서 GetMapper 가능 / 이 인터페이스를 가져와스 Mapping 시키겠다.-->
+	<!-- id에는  누구랑 Mapping을 시킬건데? 메소드명이랑-->
+	<!-- resultType 풀 패키지명 적어야함. 그래서 typeAliases가 있음 -->
+	
+	<resultMap type="Board" id="boardMap">
+		<!-- mapping 시키고 싶은 친구들만 mapping 시켜줘도 된다 -->
+		<result column="id" property="id"/>
+		<result column="writer" property="writer"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="view_cnt" property="viewCnt"/>
+		<result column="reg_date" property="regDate"/>
+	</resultMap>
+	
+	<!-- 전체글 조회 -->
+	<select id = "selectAll" resultType="Board">
+		SELECT id, content, writer, title, view_cnt as viewCnt, date_format(reg_date, '%y-%m-%d') as regDate
+		FROM board;
+	</select>
+
+	<!-- 상세 글 조회 -->
+	<select id = "selectOne" resultMap="boardMap" parameterType="int">
+		SELECT *
+		FROM board
+		WHERE id = #{idasdf}; <!-- 파라미터의 이름은 중요한 것이 아님. int형을 mapping하는 것일 뿐 -->
+	</select>
+	
+	
+	<!-- 게시글 등록 -->
+	<!-- id 기본키로 설정되어있으니 결정된 순간 Board에 값을 넣어준다. -->
+	<insert id = "insertBoard" parameterType="Board" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO board (title, writer, content)
+		VALUES (#{title}, #{writer}, #{content})
+	</insert>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="deleteBoard" parameterType="int">
+		DELETE FROM board
+		WHERE id = #{id}
+	</delete>
+	
+	<update id="updateViewCnt" parameterType="int">
+		UPDATE board
+		SET view_cnt = view_cnt+1
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 게시글 수정 -->
+	<!--  컬럼이 등록 날짜만 관리하고 있다. -->
+	<!-- 등록날짜 / 최근 조회날짜 / 수정날짜 -->
+	<update id="updateBoard" parameterType="Board">
+		UPDATE board
+		SET title=#{title}, content=#{content}, reg_date = now()
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 검색 기능 -->
+	<select id = "search" resultType="Board" parameterType="SearchCondition">
+		SELECT id, content, writer, title, view_cnt as viewCnt, date_format(reg_date, '%y-%m-%d') as regDate
+		FROM board
+		<!-- 검색 조건(동적 쿼리) -->
+		<if test="key != 'none'">
+		<!-- $ : 그냥 들어옴 , # : ' ' 붙어서 들어옴  -->
+			WHERE ${key} LIKE concat('%',#{word},'%')
+		</if>
+		<!-- 어떤 기준으로 어떤 방향으로 정렬 -->
+		<if test="orderBy != 'none'">
+			ORDER BY ${orderBy} ${orderByDir}
+		</if>
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>
